@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models
+  http://axelor.com/xml/ns/domain-models/domain-models_5.4.xsd">
+
+    <module name="student" package="com.axelor.student.db"/>
+	
+	  <sequence name="candidate.seq" initial="1" increment="1" padding="5" prefix="CA"/>
+	
+	
+	<entity name="Candidate" lang="java" cacheable="true">
+		<string name="canRef" sequence="candidate.seq" readonly="true" title="Reference"/>
+		 <string name="firstName" required="true" /> 
+ 		 <string name="lastName" required="true" />
+
+	  <string name="fullName" namecolumn="true" > 
+	    <![CDATA[
+	    if (firstName == null && lastName == null){
+	        return null;
+	   } 
+	    return  firstName + " " + lastName;
+	  ]]></string>
+
+  	  <date name="dateOfBirth"/>
+
+  <string name="email" required="true" unique="true" max="100" help="Enter proper Email"/>
+  <string name="phone" max="20" massUpdate="true"/>
+  <string name="notes" title="About me" large="true" help="Add Your Bio"  default="Hello World"/>
+
+  		
+  		
+  		<finder-method name="findByName" using="fullName" /> 
+  		<finder-method name="findByEmail" using="email" />
+  		
+  		<entity-listener class="com.axelor.student.web.ContactListener"/>
+ 	
+		<!--  	<extra-imports>
+		<![CDATA[
+		import org.slf4j.*;
+		import java.util.*;
+		]]>
+		</extra-imports>
+		
+		<extra-code>
+		<![CDATA[
+		protected final Logger log = LoggerFactory.getLogger(getClass());
+		
+		public List<String> getFooNames() {
+		  final List<String> names = new ArrayList<>();
+		  names.add("foo");
+		  names.add("bar");
+		  return names;
+		}
+		
+		]]>
+		</extra-code> -->
+ 	
+	</entity>
+	
+</domain-models>
+
+

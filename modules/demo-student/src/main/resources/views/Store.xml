@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+	<grid name="store-grid" title="Stores"
+		model="com.axelor.student.db.Store">
+		<field name="billno" />
+		<field name="student" />
+		<field name="orderDate" />
+	</grid>
+
+	<form name="store-form" title="Store"
+		model="com.axelor.student.db.Store" onNew="record-store">
+
+		<toolbar>
+			<button name="btnPrint" title="Print" showTitle="false"
+				showIf="id" onClick="print.bill" icon="fa-print" />
+		</toolbar>
+
+		<panel title="Order Detail">
+			<field name="billno" />
+			<field name="student" />
+			<field name="orderDate" />
+		</panel>
+
+
+		<panel-related field="items" editable="true"
+			orderBy="sequence" canMove="true">
+			<field name="book" />
+			<field name="price" />
+			<field name="quantity" />
+			<field name="taxes" />
+		</panel-related>
+
+		<panel>
+			<panel colSpan="4" itemSpan="12">
+				<button
+					onClick="com.axelor.student.web.StudentOrderController:calculate,save"
+					name="totalAmount" title="Total Amount" icon="fa-bar-chart"
+					widget="info-button" css="btn-primary" />
+			</panel>
+			<panel colSpan="8" css="order-subtotal" readonly="true">
+				<field name="totalAmount" />
+			</panel>
+		</panel>
+
+	</form>
+
+
+	<action-report name="print.bill" design="bill1.rptdesign"
+		output="bill" format="pdf">
+		<param name="storeId" expr="eval: id" />
+	</action-report>
+
+	<action-record name="record-store"
+		model="com.axelor.student.db.Store">
+		<field name="orderDate" expr="eval:__date__" />
+		<field name="items" expr="action:default-book-detail" />
+	</action-record>
+
+	<action-record name="default-book-detail"
+		model="com.axelor.student.db.BookLine">
+		<field name="book" expr="action:default-book-name" />
+		<!-- <field name="price" expr="250.0" /> -->
+		<!-- <field name="price" expr="select[]:select price from student_book  where book_name = bookName" /> -->
+		 <field name="price" expr="eval: book?.price" />
+		<field name="quantity" expr="1" />
+		<field name="taxes" expr="action:default-book-tax" />
+	</action-record>
+
+	<action-record name="default-book-name"
+		model="com.axelor.student.db.Book"
+		search="('self.book = ?1','E00002')">
+		<field name="book" expr="E00002" />
+		<field name="bookName" expr="Physics-11" />
+		<!-- <field name="price" expr="eval: bookName?.price" /> -->
+		<!-- <field name="price" expr="250"/> -->
+	</action-record>
+
+	<action-record name="default-book-tax"
+		model="com.axelor.student.db.Tax"
+		search="('self.code LIKE ?1', '101')">
+		<field name="code" expr="101" />
+		<field name="name" expr="VAT12" />
+		<field name="rate" expr="0.1200" />
+	</action-record>
+
+	<action-method name="act.totalAmount">
+		<call class="com.axelor.student.web.StudentOrderController"
+			method="calculate" />
+	</action-method>
+
+	<action-validate name="validate.book">
+		<notify message="Date is in future"
+			if="eval: orderDate &gt; __date__" />
+		<notify message="Book Name should not be repeat" if="bookName" />
+	</action-validate>
+
+	<action-method name="act.removeBook">
+		<call class="com.axelor.student.web.StudentOrderController"
+			method="removeDuplicate" />
+	</action-method>
+
+
+
+
+</object-views>
+
+
+
+    
+    
+    
+    
+    

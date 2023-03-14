@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+
+	<grid name="candidate-grid" title="Candidate"
+		model="com.axelor.student.db.Candidate">			<!-- editable="true" -->
+		<field name="canRef" />
+		<field name="fullName" />
+		<field name="dateOfBirth"  onChange="action-required-notes"/>
+		<field name="email" />
+		<field name="phone" />
+		<field name="notes"  />
+	</grid>
+
+	<form name="candidate-form" title="Candidate"
+		model="com.axelor.student.db.Candidate" width="large" editable="true">
+
+		<panel title="OverView">
+			<field name="canRef" title="Reference" />
+			<field name="firstName" onChange="action-name-attr" />
+			<field name="lastName" onChange="action-name-attr"/>
+			<field name="dateOfBirth" hideIf="firstName == Test" />
+			<field name="email"  />
+			<field name="phone" help="Valid phone Number" />
+		</panel>
+
+		<panel title="Notes" canCollapse="true">
+			<field name="notes" canNew="false" colSpan="12" />
+		</panel>
+
+		<panel>
+			<field name="fullName">
+				<editor>
+					<field name="firstName" />
+					<field name="lastName" />
+				</editor>
+			</field>
+		</panel>
+
+		<panel>
+			<field name="fullName">
+				<tooltip depends="fullName">
+							  <![CDATA[
+							  <strong>Name: </strong><span>{{record.fullName}}</span>
+							  ]]>
+							  </tooltip>
+			</field>
+		</panel>
+	</form>
+	
+	<action-attrs name="action-name-attr">
+	<!-- 	<attribute name="value" for="lastName"  expr="eval: firstName"/> -->
+		<attribute name="value:set" for="email" expr="eval: firstName+lastName+'@gmail.com'" />
+	</action-attrs>
+	
+
+
+</object-views>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

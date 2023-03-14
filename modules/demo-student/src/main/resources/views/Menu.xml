@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+	<menuitem name="student-info" order="-111"
+		title="Student Management" icon="fa-duotone fa-graduation-cap"
+		icon-background="orange" />
+
+	<menuitem name="student-info-detail" parent="student-info"
+		title="Students" action="student.info" icon="fa-users"
+		icon-background="green" tag-count="true" />
+
+	<action-view name="student.info"
+		model="com.axelor.student.db.Student" title="Students" home="true">
+
+		<view type="grid" name="student-grid" />
+		<view type="cards" name="student-cards" />
+		<view type="form" name="student-form" />
+		<view-param name="forceEdit" value="true" />
+		<!-- <view-param name="showArchived" value="true" /> <view-param name="details-view" 
+			value="true"/> <view-param name="search-filters" value="phone-search-filter" 
+			/> <view-param name="limit" value="20" /> <view-param name="popup-save" value="false" 
+			/> <view-param name="popup.maximized " value="true" /> <view-param name="reload-dotted" 
+			value="true" /> <view-param name="download" value="true" /> <view-param name="popup" 
+			value="true"/> <view-param name="reload-dotted" value="true"/> -->
+	</action-view>
+
+	<menuitem name="student-info-detail-root"
+		parent="student-info" title="Students-root" action="student.info.root"
+		icon="fa-users" icon-background="green" tag-count="true" />
+
+	<action-view name="student.info.root"
+		model="com.axelor.student.db.Student" title="Students-root">
+		<view type="cards" name="student-cards" />
+		<view type="grid" name="student-grid" />
+		<view type="form" name="parent-detail-form" />
+		<domain>self.phone = :_phone</domain>
+		<context name="_phone" expr="02622098989" />
+	</action-view>
+
+
+	<menuitem name="book-info-detail" parent="student-info"
+		title="Books" action="books.info" icon="fa-sharp fa-solid fa-book"
+		icon-background="green" tag-count="true" />
+
+	<action-view name="books.info"
+		model="com.axelor.student.db.Book" title="Books">
+		<view type="grid" name="book-grid" />
+		<view type="form" name="book-form" />
+	</action-view>
+
+	<menuitem name="candidate-info" parent="student-info"
+		title="Candidate" action="candidate.all"
+		icon="fa-sharp fa-solid fa-book" icon-background="green"
+		tag-count="true" />
+
+	<action-view name="candidate.all"
+		model="com.axelor.student.db.Candidate" title="Candidate">
+		<view type="grid" name="candidate-grid" />
+		<view type="form" name="candidate-form" />
+		<!-- <view-param name="forceEdit" value="true" /> -->
+		<!-- <view-param name="forceTitle" value="true"/> -->
+		<!-- <view-param name="details-view" value="true"/> -->
+		<view-param name="reload-dotted" value="true"/>
+	</action-view>
+
+
+
+	<menuitem name="store-info-detail" parent="student-info"
+		title="My-Stores" action="store.info" icon="fa fa-google-wallet"
+		icon-background="green" tag-count="true" />
+
+	<action-view name="store.info"
+		model="com.axelor.student.db.Store" title="Store">
+		<view type="grid" name="store-grid" />
+		<view type="form" name="store-form" />
+
+	</action-view>
+
+
+
+
+	<menuitem name="menu-config" parent="student-info"
+		title="Configuration" />
+
+	<menuitem name="sale-taxes" parent="menu-config"
+		title="All Taxes" action="item.taxes" />
+
+	<action-view name="item.taxes"
+		model="com.axelor.student.db.Tax" title="Taxes">
+		<view type="grid" name="tax-grid" />
+		<view type="form" name="tax-form" />
+	</action-view>
+
+
+
+
+
+</object-views>

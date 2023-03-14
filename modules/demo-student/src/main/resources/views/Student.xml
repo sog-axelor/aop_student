@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+	<selection name="standard.selection">
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+		<option value="10">10</option>
+		<option value="11">11</option>
+		<option value="12">12</option>
+	</selection>
+
+	<selection name="state.selection">
+		<option value="gujarat">Gujarat</option>
+		<option value="maharastra">Maharastra</option>
+		<option value="goa">Goa</option>
+		<option value="tamilnaidu">Tamilnaida</option>
+		<option value="rajsthan">Rajsthan</option>
+		<option value="delhi">Delhi</option>
+		<option value="bihar">Bihar</option>
+		<option value="orrisa">Orrisa</option>
+	</selection>
+
+
+	<grid name="student-grid" title="Students"
+		model="com.axelor.student.db.Student">
+		<field name="enrollment" />
+		<field name="name" />
+		<field name="dob" />
+		<field name="standard" />
+		<field name="phone" />
+		<field name="city" />
+	</grid>
+
+
+	<form name="student-form" title="Student"
+		model="com.axelor.student.db.Student"
+		onLoad="actions-student-group-validate-onChange"
+		onNew="action-phone-record-onNew,city-name,record-email"
+		onSave="action-phone-condtion,action-validate-on-student"
+		width="large">		<!-- onNew="action-phone-record-onNew" -->
+		
+		<toolbar>
+		<button name="address-validate" title="validate" onClick="com.axelor.student.web.StudentOrderController:validate" />
+		
+		</toolbar>
+
+		<panel title="Overview" name="panel1" canCollapse="true"
+			help="You can register your creditials" colSpan="12">
+			<panel colSpan="6">
+				<field name="enrollment" />
+				<field name="image" widget="image" />
+				<field name="name" onChange="action-name-method" colSpan="12" />	<!-- onChange="action-name-method" -->
+			</panel>
+			<panel stacked="true">
+				<field name="standard" readonlyIf="name==null" colSpan="2" />
+				<field name="dob" widget="date" />
+				<field name="phone" />		 <!-- hideIf="name == null" -->
+				<field name="email" title="Email" widget="email" showIf="name != null"/>
+
+			</panel>
+
+
+		</panel>
+
+		<panel title="Address" name="panel2" canCollapse="true"
+			hideIf="name == null" sidebar="true" colSpan="12">
+			<field name="location" title="Address" widget="Text"/>
+			<field name="city" />
+			<field name="state" colSpan="12" widget="NavSelect"
+				bgColor="blue" />
+		</panel>
+		<panel-include view="parent-detail-form" />
+	</form>
+
+	<form model="com.axelor.student.db.Student" title="Parent detail"
+		name="parent-detail-form">
+		<panel title="Parent detail" hideIf="name==null" name="pDetail">
+			<field name="pName" title="Parent Name" onChange="action-parent-attr" />
+			<field name="pOcc"  />
+			<field name="pPhone" widget="phone" x-icon="fa-phones" />
+			
+		</panel>
+
+		<panel-mail>
+			<mail-messages limit="4" />
+			<mail-followers />
+			
+		</panel-mail>
+
+	</form>
+
+
+
+
+
+	<cards name="student-cards" title="Students"
+		model="com.axelor.student.db.Student" orderBy="name">
+
+		<field name="image" />
+		<field name="enrollment" />
+		<field name="name" />
+		<field name="standard" />
+		<field name="dob" />
+		<field name="phone" />
+		<field name="city" />
+		<field name="state" />
+		<template>
+			<![CDATA[
+			  <div class="span4 card-image">
+  		<img ng-src="{{$image(null, 'image')}}">
+		    </div>
+		    <div class="span8">
+		    <strong>{{enrollment}}</strong><br>
+		     <strong>{{name}}</strong><br>
+		      <strong> {{standard}}</strong><br>
+		       <strong>{{dob}}</strong><br>
+				<strong>{{phone}}</strong><br>
+		      <strong>{{city}}</strong><br>
+		    </div>
+			]]>
+			</template>
+	</cards>	
+
+		<action-record name="record-email" model="com.axelor.student.db.Student">
+			<field name="email" expr="@gmail.com"/>
+		</action-record>
+	
+	
+	<action-validate name="action-validate-on-student">
+		<alert message="Date is in future " if="dob &gt; __date__" />
+		<alert message="Parent details is also requried"
+			if="pName == null" />
+			<notify message="parent occupation is not empty" if="pOcc == null" />
+	</action-validate>
+
+
+	<search-filters name="phone-search-filter"
+		model="com.axelor.student.db.Student" title="Phone Number">
+		<field name="state" hidden="true" />
+		<filter title="Phone Number is not null">
+			<domain>self.phone != null</domain>
+		</filter>
+	</search-filters>
+
+	<action-record name="city-name"
+		model="com.axelor.student.db.Student">
+		<field name="city" expr="surat" />
+		<!-- <field name="pName" expr="Hello" /> -->
+	</action-record>
+
+	<action-group
+		name="actions-student-group-validate-onChange">
+		<action name="save" />
+		<action name="action-name-validate" />
+
+	</action-group>
+
+	<action-attrs name="action-name-validate">				<!-- used to change attributes of view items. -->
+		<attribute name="readonly" for="name" expr="eval: true"
+			if="name == 'Test'" />
+		<attribute name="collapse" for="panel2" expr="eval: true"
+			if="phone == null" />
+		<attribute name="required" for="phone" expr="eval :true"
+			if="phone == null" />
+	</action-attrs>
+
+
+	<action-record name="action-phone-record-onNew"
+		model="com.axelor.student.db.Student">
+		<field name="phone" expr="eval: _phone" />		<!--phone context area of domain -->
+		<field name="standard" expr="6" />
+		<field name="dob" expr="eval: __date__" />
+		<field name="city" expr="" />
+	</action-record>
+
+	<action-condition name="action-phone-condtion">
+		<check field="dob" if="dob &lt; LocalDate.of(2003,1,1)"
+			error="Date of birth have not  more then 18 years" />
+		<check field="phone" if="phone == null"
+			error="Phone Number Should not be Null" />
+	</action-condition>
+
+	<action-method name="action-name-method">
+		<call class="com.axelor.student.web.StudentOrderController"
+			method="sayName" />
+	</action-method>
+
+	<!-- <action-record name="action-record-call" model="com.axelor.student.db.Student"> 
+		<field name="name" expr="call:com.axelor.student.web.StudentOrderController:sayName()"/> 
+		</action-record> -->
+
+	<action-attrs name="action-parent-attr">
+		<attribute name="value" for="pOcc"  expr="eval: pName"/>		<!-- 	if="pName != null" -->
+	</action-attrs>
+	
+</object-views>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

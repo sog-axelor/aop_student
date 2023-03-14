@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.4.xsd">
+
+  <module name="student" package="com.axelor.student.db"/>
+  
+  <sequence name="billno.token" initial="1" increment="1" padding="5" prefix="BO"/>
+  
+
+  <entity name="Store" cacheable="true" repository="abstract">
+   <many-to-one ref="Student" name="student" required="true" />
+    <string name="billno" sequence="billno.token" readonly="true" title="Bill No"/>
+     <date name="orderDate" required="true" title="Order Date" />
+     <decimal name="amount" precision="20" scale="4"/>
+     <decimal name="taxAmount" precision="20" scale="4"/>
+     <decimal name="totalAmount" precision="20" scale="2"/>
+	<one-to-many name="items" ref="BookLine" mappedBy="store" orderBy="price"/>
+  </entity>
+  
+  
+
+</domain-models>
+
+
+
+
+

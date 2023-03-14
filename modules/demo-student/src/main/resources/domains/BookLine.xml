@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models
+	xmlns="http://axelor.com/xml/ns/domain-models"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.4.xsd">
+
+	<module name="student" package="com.axelor.student.db" />
+
+	<entity name="BookLine">
+		<many-to-one ref="Store" name="store" required="true" column="student_Store" />
+		<many-to-one name="book" ref="Book" required="true" />
+		<decimal name="price" precision="20" scale="4" min="0.0" />
+		<integer name="quantity" min="1" required="true" />
+		<integer name="sequence" />
+		<many-to-many ref="Tax" name="taxes" />
+
+	</entity>
+
+</domain-models>

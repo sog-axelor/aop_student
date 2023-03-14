@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.4.xsd">
+
+	<module name="student" package="com.axelor.student.db" />
+	<sequence name="student.enroll" initial="1" increment="1"
+		padding="5" prefix="E" />
+
+	<entity name="Student" cacheable="true">
+		<string name="enrollment" sequence="student.enroll"
+			readonly="true" />
+		<string name="name" required="true" unique="true" min="2" />
+		<string name="standard" selection="standard.selection" />
+		<string name="phone" />
+		<binary name="image" image="true" />
+		<date name="dob" />
+		<string name="city" />
+		<string name="state" selection="state.selection" />
+		<string name="email" title="Email" />
+		<string name="location" multiline="true" translatable="true" />
+
+		<string name="pName" title="Father Name" />
+		<string name="pOcc" title="Occupation" />
+		<string name="pPhone" title="Contact" />
+
+		<track>
+			<field name="name" on="CREATE" />
+			<field name="standard" />
+			<field name="phone" on="UPDATE"/>
+			<field name="dob" />
+			<field name="city" />
+			<field name="pName" on="UPDATE" if="name"/>
+			<message if="true" on="CREATE"> Student Created</message>
+			<message if="standard">Standard Selected</message>
+			<message if="dob" tag="warning">Dob Added</message>
+			<message if="city=='surat'" tag="success">Preferable city</message>
+			<message if="pName" on="UPDATE">Parent update</message>
+
+		</track>
+
+
+	</entity>
+</domain-models>
